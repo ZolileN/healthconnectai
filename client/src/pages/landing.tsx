@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 export default function Landing() {
+  const [location, setLocation] = useLocation();
   const features = [
     {
       icon: Brain,
@@ -91,12 +92,15 @@ export default function Landing() {
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="/api/login">
-                  <Button size="lg" className="min-w-[200px] gap-2" data-testid="button-hero-get-started">
-                    Get Started Free
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </a>
+                    <Button 
+                      size="lg" 
+                      className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90" 
+                      onClick={() => setLocation('/login')}
+                      data-testid="button-cta-signup"
+                    >
+                      Get Started Now
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
                 <Link href="/articles">
                   <Button variant="outline" size="lg" className="min-w-[200px] gap-2" data-testid="button-hero-learn-more">
                     <BookOpen className="h-4 w-4" />
@@ -248,13 +252,15 @@ export default function Landing() {
                     </div>
                   </div>
                 </div>
-
-                <a href="/api/login">
-                  <Button size="lg" className="gap-2 mt-4" data-testid="button-services-start">
+                  <Button 
+                    size="lg" 
+                    className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90" 
+                    onClick={() => setLocation('/login')}
+                    data-testid="button-cta-signup"
+                  >
                     Start Your Health Journey
                     <ArrowRight className="h-4 w-4" />
                   </Button>
-                </a>
               </div>
 
               <div className="relative">
@@ -300,12 +306,16 @@ export default function Landing() {
             <p className="text-primary-foreground/80 text-lg mb-8 max-w-2xl mx-auto">
               Join thousands of users who trust HealthCheck for their health needs. Start your free assessment today.
             </p>
-            <a href="/api/login">
-              <Button size="lg" variant="secondary" className="gap-2" data-testid="button-cta-signup">
-                Get Started Now
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </a>
+            <Button 
+              size="lg" 
+              variant="secondary"
+              className="gap-2" 
+              onClick={() => setLocation('/login')}
+              data-testid="button-cta-signup"
+            >
+              Get Started Now
+              <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
         </section>
       </main>

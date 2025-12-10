@@ -4,28 +4,35 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/contexts/auth-context"; // Updated import path
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 // Layouts
 const PublicLayout = ({ children }: { children: React.ReactNode }) => (
   <div className="min-h-screen bg-background">{children}</div>
 );
 
-const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const [, setLocation] = useLocation();
+  const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
+    const { isAuthenticated, isLoading } = useAuth();
+    const [, setLocation] = useLocation();
+    const [isClient, setIsClient] = useState(false);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+    useEffect(() => {
+      setIsClient(true);
+      if (!isLoading && !isAuthenticated) {
+        setLocation("/login");
+      }
+    }, [isLoading, isAuthenticated, setLocation]);
 
-  if (!isAuthenticated) {
-    setLocation("/login");
-    return null;
-  }
+    if (!isClient || isLoading) {
+      return <div>Loading...</div>;
+    }
 
-  return <div className="min-h-screen bg-background">{children}</div>;
-};
+    if (!isAuthenticated) {
+      return null; // Will be immediately replaced by the redirect
+    }
+
+    return <div className="min-h-screen bg-background">{children}</div>;
+  };
 
 // Lazy-loaded pages with Suspense fallback
 const withSuspense = (Component: React.ComponentType) => (props: any) => (
@@ -35,7 +42,7 @@ const withSuspense = (Component: React.ComponentType) => (props: any) => (
 );
 
 // Lazy load pages
-const Home = lazy(() => import("@/pages/home"));
+const Landing = lazy(() => import("@/pages/landing"));
 const LoginPage = lazy(() => import("@/pages/auth/login"));
 const RegisterPage = lazy(() => import("@/pages/auth/register"));
 const AboutPage = lazy(() => import("@/pages/about"));
@@ -50,7 +57,7 @@ function Router() {
       {/* Public Routes */}
       <Route path="/">
         <PublicLayout>
-          <Home />
+          <Landing />
         </PublicLayout>
       </Route>
       
